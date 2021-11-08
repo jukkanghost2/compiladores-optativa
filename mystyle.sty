@@ -1,0 +1,110 @@
+\ProvidesPackage{mystyle}
+%--------------------------------------------------------------------------------------------------------------------------
+%  PREÁMBULO - FORMATO UNC - FCEFyN - LEONARDO ALBERTO DESIMONE
+%--------------------------------------------------------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\graphicspath{ {img/} }
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{caption}
+
+\usepackage{nomencl}
+\makenomenclature
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{cite}
+\usepackage{url}
+
+\usepackage{float}
+
+\usepackage[inline]{enumitem}
+
+\usepackage{cprotect}
+\usepackage{siunitx}
+\usepackage{lastpage}
+\usepackage{listings}
+\usepackage{afterpage}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{lscape}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{ragged2e}
+\usepackage{pdfpages}
+\usepackage{cancel}
+\usepackage{tcolorbox}
+\tcbuselibrary{theorems}
+
+\usepackage{titlesec}
+\setcounter{secnumdepth}{5}
+
+\usepackage{txfonts}
+\usepackage[left=2cm,right=1.5cm,top=3cm,head=2cm,bottom=2cm]{geometry}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhf{}
+\fancyhead[L]{\textbf{Código intermedio - GCC - CLANG}}
+\fancyhead[R]{\includegraphics[width=0.21\textwidth]{img/logo.jpg} \includegraphics[width=0.13\textwidth]{img/fcefyn.png}}
+
+\renewcommand{\headrulewidth}{2pt} 
+\renewcommand{\footrulewidth}{1pt}
+
+\lfoot{\emph{Julián González}}
+\rfoot{\thepage \; de \;\pageref{LastPage}}
+
+\lstdefinestyle{mystyle}{
+    %agregar "float" si top pero en la definicion dentro de cada lstinputlisting que llamo
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,
+    breaklines=true,
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    tabsize=2
+}
+
+% --- Titulo para seccion ---
+
+\renewcommand{\thesection}{\Roman{section}}
+\titleformat{\section}{\center\Large\bfseries}{\thesection}{1em}{}
+
+% --- Titulo para subsecciones ---
+
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\titleformat{\subsection}{\filright\large\itshape}{\thesubsection}{1em}{}
+
+% --- Titulo para subsubsecciones ---
+
+\renewcommand{\thesubsubsection}{\arabic{subsubsection})} 
+\titleformat{\subsubsection}{\filright\normalsize\itshape}{\thesubsubsection}{1em}{}
+\titlespacing{\subsubsection}{1em}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+% --- Titulo para paragraphs ---
+
+%\renewcommand{\theparagraph}{\alph{paragraphs})} 
+%\titleformat*{\paragraphs}{\filright\large\itshape}{\theparagraph}{1em}{}
+%\titlespacing*{\paragraphs}{2em}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+
+
+
+\lstset{style=mystyle}
