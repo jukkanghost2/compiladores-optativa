@@ -1,0 +1,35 @@
+\chapter{Codigo intermedio de GCC}
+
+A continuacion se exponen las distintos codigos intermedios que GCC utiliza en la compilacion. 
+Los distintos codigos intermedios estan relacionados en la forma que la salida 
+de cada uno es la entrada del siguiente, avanzando desde una representacion general de alto nivel 
+hacia una especifica de bajo nivel. 
+
+\section{\emph{Generic}}
+
+\emph{Generic} es un codigo intermedio independiente del lenguaje con estructura de arbol 
+que es generado por el \emph{front end}. \emph{Generic} es capaz de representar todos los 
+lenguajes admitidos por GCC. \emph{Generic} se produce eliminando construcciones especificas 
+del lenguaje del arbol de parseo. 
+
+\section{\emph{Gimple}}
+
+\emph{Gimple} es un codigo intermedio de tres direcciones resultante de desglosar \emph{Generic} en tuplas 
+de no mas de tres operandos, a traves de la herramienta interna de GCC llamada \emph{Gimplifier}. 
+\emph{Gimple} introduce variables temporales para poder computar expresiones complejas y permite 
+supervisar el flujo de control a nivel inferior con sentencia secuenciales y saltos incondicionales. 
+\emph{Gimple} es el codigo intermedio principal de GCC (los lenguajes C y C++ se convierten a \emph{Gimple} 
+sin pasar por \emph{Generic}), ademas de ser conveniente para optimizar. 
+
+Existen tres tipos de \emph{Gimple}:
+
+\begin{itemize}
+    \item \emph{Gimple} de alto nivel que es lo que se obtiene despues de desglosar el \emph{Generic}.
+    \item \emph{Gimple} de bajo nivel que se obtiene al linealizar todas las estructuras de flujo de control de 
+            del \emph{Gimple} de alto nivel, incluidas las funciones anidadas, el manejo de excepciones y los bucles.
+    \item \emph{Gimple} SSA es el \emph{Gimple} de bajo nivel reescrito en la forma SSA.
+\end{itemize}
+
+\section{\emph{RTL}}
+
+\emph{RTL} es un codigo intermedio de bajo nivel semejante al lenguaje ensamblador.
