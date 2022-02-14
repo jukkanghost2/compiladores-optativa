@@ -1,0 +1,76 @@
+\chapter{Codigo intermedio de CLANG/LLVM}
+
+Clang es el \emph{frontend} de LLVM para la familia de los lenguajes de C. Clang consiste 
+en un preprocesador C, un analizador léxico, un analizador sintáctico, un analizador 
+semántico y un generador IR.
+El Optimizador analiza la IR y la traduce a una forma más eficiente. \emph{opt} es la 
+herramienta de optimización de LLVM.
+El \emph{Backend} genera código máquina al mapear la IR al conjunto de instrucciones del 
+hardware de destino. La herramienta backend de LLVM es llc. 
+Genera código máquina a partir del IR de LLVM en tres fases: selección de instrucciones, 
+asignación de registros y programación de la instrucción.
+
+\section{Analizador lexico y sintactico}
+
+El analizador lexico lee la salida del preprocesador y realiza su tokenización.
+El analizador sintactico chequea si la gramática del lenguaje acepta la 
+secuencia de tokens generados por el analizador lexico y reporta errores de sintáxis.
+El analizador sintactico produce el \emph{error recovery}, si es posible.
+La tokenización se organiza de la siguiente manera:
+\begin{itemize}
+    \item La definición del tipo de token en cuestion.
+    \item El \emph{token}.
+    \item \emph{Flag} que describe un adicional de el \emph{token}.
+    \item La ubicacion del token en el codigo fuente.
+\end{itemize}
+Después de analizar la gramática de la secuencia de \emph{tokens}, 
+emite un árbol abstracto sintactico. Los nodos de un árbol abstracto sintactico 
+representan declaraciones, sentencias y tipos.
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+    $ clang -fsyntax-only -Xclang -dump-tokens codigo-ejemplo.c  2>&1 | tee tokens  \end{lstlisting}
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+    $ clang -fsyntax-only -Xclang -ast-dump codigo-ejemplo.c -fno-color-diagnostics > ast \end{lstlisting}
+
+\section{Analizador semantico}
+El analizador semántico recorre el árbol abstracto sintactico, 
+determinando si las sentencias del código tienen un significado válido. 
+Esta fase comprueba los errores de tipo.
+
+\section{LLVM IR}
+El generador IR traduce el árbol abstracto sintactico a codigo intermedio. 
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+    $ clang -S -emit-llvm codigo-ejemplo.c -o llvm-ir.ll \end{lstlisting}
+
+En esta fase tambien trabaja el optimizador que mejora la eficiencia del código basándose 
+en su comprensión del comportamiento en tiempo de ejecución del programa. 
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+    $ opt -O2 -S llvm-ir.ll -o llvm-ir-optimized.ll \end{lstlisting}
+
+\section{Selección de instrucciones} 
+
+La seleccion de instrucciones es el mapeo de instrucciones IR al conjunto 
+de instrucciones de la máquina de destino. Este paso utiliza un espacio de 
+nombres infinito de registros virtuales.
+
+\section{Asignación de registros} 
+
+La asignacion de registros es el mapeo de registros virtuales a registros 
+reales en la arquitectura de destino.
+
+\section{Programación de la instrucción}
+
+La programación de la instrucción es la reordenación de operaciones para 
+reflejar las restricciones de funcionamiento de la máquina de destino.
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+    $ llc llvm-ir.ll -print-machineinstrs 2>&1 tee machineinstrs \end{lstlisting}
+
+\section{\emph{Assembler}}
+Por ultimo, es posible obtener la salida en lenguaje \emph{assembler} del codigo fuente.
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+    $ llc llvm-ir.ll -o assembly.s \end{lstlisting}

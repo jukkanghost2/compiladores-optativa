@@ -5,12 +5,36 @@ Los distintos codigos intermedios estan relacionados en la forma que la salida
 de cada uno es la entrada del siguiente, avanzando desde una representacion general de alto nivel 
 hacia una especifica de bajo nivel. 
 
+\section{Analizador lexico y sintactico}
+El analizador lexico lee la secuencia de caracteres desde la salida del preprocesador y agrupa los 
+caracteres en secuencias llamadas lexemas.
+Por cada lexema, el analizador genera una token con la forma:
+\begin{center}
+    [\emph{token name, attribute value}]
+\end{center}
+Donde \emph{token name} son símbolos abstractos usados durante el análisis sintáctico,
+y \emph{attribute value} es un puntero a una entrada en la tablas de símbolos.
+GCC no permite obtener los tokens válidos en forma de texto. Es un archivo interno.
+El analizador sintactico chequea si la gramática del lenguaje acepta la secuencia
+de tokens generados por el analizador lexico, sino reporta errores de sintaxis. 
+Ademas, el analizador sintactico usa el primer componente de cada token para crear una representación en forma de árbol 
+que muestre la estructura de los tokens, es decir, un árbol sintáctico.
+Con el \emph{flag} -fdump-tree-original-raw se obtiene la representacion textual del arbol abstracto sintactico.
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+    $ gcc -fdump-tree-original-raw codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
+
+\section{Analizador semantico}
+El analizador semantico utiliza el árbol sintáctico y la información de la tabla de símbolos 
+para revisar la consistencia semántica del programa fuente con respecto a la definición del lenguaje. 
+
 \section{\emph{Generic}}
 
 \emph{Generic} es un codigo intermedio independiente del lenguaje con estructura de arbol 
 que es generado por el \emph{front end}. \emph{Generic} es capaz de representar todos los 
 lenguajes admitidos por GCC. \emph{Generic} se produce eliminando construcciones especificas 
 del lenguaje del arbol de parseo. 
+GCC pasa del arbol abstracto sintactico a la representacion en \emph{Gimple} en lenguajes como C.
 
 \section{\emph{Gimple}}
 
@@ -30,6 +54,42 @@ Existen tres tipos de \emph{Gimple}:
     \item \emph{Gimple} SSA es el \emph{Gimple} de bajo nivel reescrito en la forma SSA.
 \end{itemize}
 
-\section{\emph{RTL}}
+Con el \emph{flag} -fdump-tree-gimple se obtiene la representacion en la forma de \emph{Gimple}.
 
-\emph{RTL} es un codigo intermedio de bajo nivel semejante al lenguaje ensamblador.
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+    $ gcc -fdump-tree-gimple codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
+
+Ademas, con el \emph{flag} -fdump-tree-all-graph GCC genera muchos archivos con la extension .cfg 
+los cuales pueden visualizarse con una herramienta online Graphviz. Esta herramienta permite 
+ver la evolucion del codigo en las distintas pasadas de una manera mucho mas conveniente 
+para el usuario. 
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+    $ gcc -fdump-tree-all-graph codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
+
+
+\section{\emph{Register Transfer Language}}
+
+\emph{Register Transfer Language} es un codigo intermedio de bajo nivel semejante al lenguaje ensamblador.
+La mayor parte del trabajo del compilador se realiza en \emph{Register Transfer Language}. Tiene una forma interna, 
+formada por estructuras que apuntan a otras estructuras, y una forma textual 
+que se utiliza en la descripción de la máquina y en los volcados de depuración 
+impresos. El formulario textual usa paréntesis anidados para indicar los punteros en el formulario interno.
+Con el \emph{flag} -fdump-rtl-final se obtiene la representacion en la forma de \emph{Register Transfer Language} ya optimizado por el compilador.
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+    $ gcc -fdump-rtl-final codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
+
+\section{\emph{Assembler}}
+Por ultimo, es posible obtener la salida en \emph{Assembler} con el \emph{flag} -S.
+
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+    $ gcc -S codigo-ejemplo.c -o codigo-ejemplo.s  \end{lstlisting}
+
+% \section{Flags de compilacion}
+% GCC permite obtener los archivos internos que genera en la compilacion donde se observa 
+% el paso del codigo fuente por los codigos intermedios y su optimizacion. Solo se describiran los archivos 
+% mas importantes porque GCC genera una gran cantidad de ellos.
+% Los nombres por defecto de los archivos se construyen concatenando el nombre base del archivo, el numero de pasada, 
+% la letra de la fase y el nombre de la pasada. 
+
