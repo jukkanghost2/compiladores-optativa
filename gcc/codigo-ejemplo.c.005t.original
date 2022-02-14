@@ -1,0 +1,41 @@
+
+;; Function main (null)
+;; enabled by -tree-original
+
+
+{
+  int a = 20;
+  int b = 30;
+  int c = 0;
+  int arr[10];
+
+    int a = 20;
+    int b = 30;
+    int c = 0;
+    int arr[10];
+  c = suma (a, b);
+  {
+    int i = 0;
+
+        int i = 0;
+    goto <D.1955>;
+    <D.1954>:;
+    arr[i] = suma (a, b);
+    i++ ;
+    <D.1955>:;
+    if (i < c) goto <D.1954>; else goto <D.1952>;
+    <D.1952>:;
+  }
+  return 0;
+}
+return 0;
+
+
+;; Function suma (null)
+;; enabled by -tree-original
+
+
+{
+  return a + b;
+}
+

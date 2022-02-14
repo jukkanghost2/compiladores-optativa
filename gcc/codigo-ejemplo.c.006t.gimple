@@ -1,0 +1,51 @@
+int main ()
+{
+  int D.1961;
+
+  {
+    int a;
+    int b;
+    int c;
+    int arr[10];
+
+    try
+      {
+        a = 20;
+        b = 30;
+        c = 0;
+        c = suma (a, b);
+        {
+          int i;
+
+          i = 0;
+          goto <D.1955>;
+          <D.1954>:
+          _1 = suma (a, b);
+          arr[i] = _1;
+          i = i + 1;
+          <D.1955>:
+          if (i < c) goto <D.1954>; else goto <D.1952>;
+          <D.1952>:
+        }
+        D.1961 = 0;
+        return D.1961;
+      }
+    finally
+      {
+        arr = {CLOBBER};
+      }
+  }
+  D.1961 = 0;
+  return D.1961;
+}
+
+
+int suma (int a, int b)
+{
+  int D.1964;
+
+  D.1964 = a + b;
+  return D.1964;
+}
+
+
