@@ -1,0 +1,12 @@
+\chapter{Conclusión}
+
+Es posible observar que la compilación empleando GCC como CLANG/LLVM respeta las
+fases estándar de todo compilador moderno. Las diferencias que se encuentran residen en
+los formatos de código interno que utilizan, en especial, código intermedio de \emph{middle-end}:
+GIMPLE, para GCC, y LLVM IR, para CLANG/LLVM.
+A su vez, podemos observar que el código en \emph{assembler} final es el mismo en esencia,
+independiente del compilador usado. Dichas diferencias residen en el nombre de variables y
+otros \emph{tags} así como las direcciones de cada elemento (distintas por obvias razones).
+CLANG/LLVM permite una mayor flexibilidad a la hora de definir optimizaciones y formatos
+de códigos internos a emitir. Sin embargo, para este cometido, no se ha desplegado el
+máximo provecho de dichas optimizaciones.
