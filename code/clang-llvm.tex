@@ -10,6 +10,16 @@ hardware de destino. La herramienta backend de LLVM es llc.
 Genera código máquina a partir del IR de LLVM en tres fases: selección de instrucciones, 
 asignación de registros y programación de la instrucción.
 
+\begin{figure}[ht]
+    \begingroup
+        \centering
+            \includegraphics[width=1\textwidth,height=1\textheight,keepaspectratio]{clang process}
+            \caption{Proceso de compilación de CLANG/LLVM.}
+            \label{fig:clang process}
+        \par
+    \endgroup
+\end{figure}
+
 \section{Analizador lexico y sintactico}
 
 El analizador lexico lee la salida del preprocesador y realiza su tokenización.
@@ -27,10 +37,10 @@ Después de analizar la gramática de la secuencia de \emph{tokens},
 emite un árbol abstracto sintactico. Los nodos de un árbol abstracto sintactico 
 representan declaraciones, sentencias y tipos.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener tokens \cite{repositorio} para CLANG/LLVM., language=bash]
     $ clang -fsyntax-only -Xclang -dump-tokens codigo-ejemplo.c  2>&1 | tee tokens  \end{lstlisting}
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener ast \cite{repositorio} para CLANG/LLVM., language=bash]
     $ clang -fsyntax-only -Xclang -ast-dump codigo-ejemplo.c -fno-color-diagnostics > ast \end{lstlisting}
 
 \section{Analizador semantico}
@@ -41,13 +51,13 @@ Esta fase comprueba los errores de tipo.
 \section{LLVM IR}
 El generador IR traduce el árbol abstracto sintactico a codigo intermedio. 
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener llvm-ir.ll \cite{repositorio} para CLANG/LLVM., language=bash]
     $ clang -S -emit-llvm codigo-ejemplo.c -o llvm-ir.ll \end{lstlisting}
 
 En esta fase tambien trabaja el optimizador que mejora la eficiencia del código basándose 
 en su comprensión del comportamiento en tiempo de ejecución del programa. 
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener llvm-ir-optimizedd.ll \cite{repositorio} para CLANG/LLVM., language=bash]
     $ opt -O2 -S llvm-ir.ll -o llvm-ir-optimized.ll \end{lstlisting}
 
 \section{Selección de instrucciones} 
@@ -66,11 +76,11 @@ reales en la arquitectura de destino.
 La programación de la instrucción es la reordenación de operaciones para 
 reflejar las restricciones de funcionamiento de la máquina de destino.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener machineinstrs \cite{repositorio} para CLANG/LLVM., language=bash]
     $ llc llvm-ir.ll -print-machineinstrs 2>&1 tee machineinstrs \end{lstlisting}
 
 \section{\emph{Assembler}}
 Por ultimo, es posible obtener la salida en lenguaje \emph{assembler} del codigo fuente.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para CLANG/LLVM., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener assembly.s \cite{repositorio} para CLANG/LLVM., language=bash]
     $ llc llvm-ir.ll -o assembly.s \end{lstlisting}

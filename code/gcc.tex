@@ -5,6 +5,16 @@ Los distintos codigos intermedios estan relacionados en la forma que la salida
 de cada uno es la entrada del siguiente, avanzando desde una representacion general de alto nivel 
 hacia una especifica de bajo nivel. 
 
+\begin{figure}[ht]
+    \begingroup
+        \centering
+            \includegraphics[width=1\textwidth,height=1\textheight,keepaspectratio]{gcc_process}
+            \caption{Proceso de compilación de GCC.}
+            \label{fig:gcc_process}
+        \par
+    \endgroup
+\end{figure}
+
 \section{Analizador lexico y sintactico}
 El analizador lexico lee la secuencia de caracteres desde la salida del preprocesador y agrupa los 
 caracteres en secuencias llamadas lexemas.
@@ -21,7 +31,7 @@ Ademas, el analizador sintactico usa el primer componente de cada token para cre
 que muestre la estructura de los tokens, es decir, un árbol sintáctico.
 Con el \emph{flag} -fdump-tree-original-raw se obtiene la representacion textual del arbol abstracto sintactico.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener codigo-ejemplo.c.005t.original \cite{repositorio} para GCC., language=bash]
     $ gcc -fdump-tree-original-raw codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
 
 \section{Analizador semantico}
@@ -56,7 +66,7 @@ Existen tres tipos de \emph{Gimple}:
 
 Con el \emph{flag} -fdump-tree-gimple se obtiene la representacion en la forma de \emph{Gimple}.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener codigo-ejemplo.c.006t.gimple \cite{repositorio} para GCC., language=bash]
     $ gcc -fdump-tree-gimple codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
 
 Ademas, con el \emph{flag} -fdump-tree-all-graph GCC genera muchos archivos con la extension .cfg 
@@ -77,19 +87,13 @@ que se utiliza en la descripción de la máquina y en los volcados de depuració
 impresos. El formulario textual usa paréntesis anidados para indicar los punteros en el formulario interno.
 Con el \emph{flag} -fdump-rtl-final se obtiene la representacion en la forma de \emph{Register Transfer Language} ya optimizado por el compilador.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener codigo-ejemplo.c.330r.final \cite{repositorio} para GCC., language=bash]
     $ gcc -fdump-rtl-final codigo-ejemplo.c -o codigo-ejemplo  \end{lstlisting}
 
 \section{\emph{Assembler}}
 Por ultimo, es posible obtener la salida en \emph{Assembler} con el \emph{flag} -S.
 
-\begin{lstlisting}[label=comandoC, caption= Comando de compilación del archivo codigo-ejemplo.c \cite{repositorio} para GCC., language=bash]
+\begin{lstlisting}[label=comandoC, caption= Comando de compilación para obtener codigo-ejemplo.s \cite{repositorio} para GCC., language=bash]
     $ gcc -S codigo-ejemplo.c -o codigo-ejemplo.s  \end{lstlisting}
 
-% \section{Flags de compilacion}
-% GCC permite obtener los archivos internos que genera en la compilacion donde se observa 
-% el paso del codigo fuente por los codigos intermedios y su optimizacion. Solo se describiran los archivos 
-% mas importantes porque GCC genera una gran cantidad de ellos.
-% Los nombres por defecto de los archivos se construyen concatenando el nombre base del archivo, el numero de pasada, 
-% la letra de la fase y el nombre de la pasada. 
 
