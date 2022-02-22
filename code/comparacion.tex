@@ -1,4 +1,4 @@
-\chapter{Comparacion entre GCC y CLANG/LLVM}
+\chapter{Comparación entre GCC y CLANG/LLVM}
 
 A partir de un mismo código fuente en lenguaje C, 
 se procederá a la compilación empleando tanto GCC como CLANG/LLVM. 
@@ -6,36 +6,36 @@ Luego, se llevará a cabo una comparación y breve descripción de lo
 observado. Se presentan los códigos relevantes que coinciden 
 con las etapas nombradas anteriormente.
 
-\section{Analizador lexico y sintactico}
-GCC no permite obtener la salida del analizador lexico, por lo que se analizara 
-el arbol abstracto sintactico. 
+\section{Analizador léxico y sintáctico}
+GCC no permite obtener la salida del analizador léxico, por lo que se analizara 
+el árbol abstracto sintáctico. 
 
-GCC describe el arbol relacionando sus nodos a partir de punteros con la concatenando 
-"@" y un numero. Entonces, es posible armar el arbol siguiendo estos punteros. 
-En este fragmento se ve como la declaracion de la variable "a", que es del tipo entera con 
-un valor inicial de "20", es traducida al arbol.
+GCC describe el árbol relacionando sus nodos a partir de punteros con la concatenando 
+"@" y un número. Entonces, es posible armar el árbol siguiendo estos punteros. 
+En este fragmento se ve como la declaración de la variable "a", que es del tipo entera con 
+un valor inicial de "20", es traducida al árbol.
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del codigo fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del código fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
     int a = 20;      \end{lstlisting}
 
-Se observa en @5 la palabra clave \emph{var\_decl}, la cual indica la declaracion de una variable. En este 
+Se observa en @5 la palabra clave \emph{var\_decl}, la cual indica la declaración de una variable. En este 
 caso, el campo \emph{name} apunta a @9, que es un nodo identificador con el nombre de la variable "a". 
-Tambien, se puede obtener el tipo de la variable refiriendose a @10, que muestra \emph{integer\_type}, y lo 
+También, se puede obtener el tipo de la variable refiriéndose a @10, que muestra \emph{integer\_type}, y lo 
 mismo para \emph{init} se refiere al valor inicial apuntado por @12 que muestra que es el valor 20.
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del arbol de GCC del archivo codigo-ejemplo.c.005t.original. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del árbol de GCC del archivo codigo-ejemplo.c.005t.original. \cite{repositorio}, language=bash]
     @5      var_decl         name: @9       type: @10      scpe: @11   srcp: codigo-ejemplo.c:5      init: @12     
     @9      identifier_node  strg: a        lngt: 1       
     @10     integer_type     name: @24      size: @13      algn: 32      prec: 32       sign: signed   min : @25     max : @26     
     @11     function_decl    name: @27      type: @28      srcp: codigo-ejemplo.c:3      
     @12     integer_cst      type: @10      int: 20    \end{lstlisting}
 
-El arbol construido por CLANG/LLVM se muestra de una forma mas grafica con barras e identacion. 
+El árbol construido por CLANG/LLVM se muestra de una forma más gráfica con barras e indentación. 
 Se observa una \emph{FunctionDecl}, la cual hace referencia al \emph{main()} y adentro de esta una 
-\emph{DeclStmt}, que se encuentra en la linea 5 del codigo fuente. El nodo \emph{VarDecl} 
+\emph{DeclStmt}, que se encuentra en la línea 5 del código fuente. El nodo \emph{VarDecl} 
 define la existencia una variable llamada a de tipo \emph{int}, con un valor de 20.
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del arbol de CLANG/LLVM del archivo ast. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del árbol de CLANG/LLVM del archivo ast. \cite{repositorio}, language=bash]
     |-FunctionDecl 0x207e190 <line:3:1, line:17:1> line:3:5 main 'int ()'
     | `-CompoundStmt 0x207ea60 <col:12, line:17:1>
     |   |-DeclStmt 0x207e2d0 <line:5:5, col:15>
@@ -45,10 +45,10 @@ define la existencia una variable llamada a de tipo \emph{int}, con un valor de 
 
 \section{Gimple vs LLVM IR}
 
-En esta etapa se comparara como el bucle del codigo fuente se desarrolla en el codigo intermedio 
+En esta etapa se comparará como el bucle del código fuente se desarrolla en el código intermedio 
 de ambos compiladores. 
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del codigo fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del código fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
     for (int i = 0; i < c; i++)
     {
         arr[i] = suma(a, b);
@@ -56,9 +56,9 @@ de ambos compiladores.
 
 GCC emplea \emph{Gimple} para esta etapa que tiene una familiaridad con el lenguaje C, 
 en el cual se ve que se crean etiquetas para realizar el control del salto 
-y el bucle se transforma en sentencias \emph{if else}. Tambien, se crean variables 
+y el bucle se transforma en sentencias \emph{if else}. También, se generan variables 
 temporales para alojar resultados, como por ejemplo "\_1" para el resultado que 
-devuelve la funcion suma.  
+devuelve la función suma.  
 
 \begin{lstlisting}[label=comandoC, caption= Fragmento del \emph{Gimple} de GCC del archivo codigo-ejemplo.c.006t.gimple. \cite{repositorio}, language=bash]
     {
@@ -74,12 +74,12 @@ devuelve la funcion suma.
         <D.1952>:
     } \end{lstlisting}
 
-Por otro lado se tiene LLVM IR, el cual ya tiene un parecido con el lenguaje \emph{assembler} 
-mas que con el lenguaje C. Se utilizan variables temporales para los resultados de las 
-instrucciones sin repetir concatenando "\%" y un numero. La etiqueta 10 hace referencia 
-al control del salto que en la ultima instruccion decide si saltar a la etiqueta 14 o 24. 
+Por otro lado, se tiene LLVM IR, el cual ya tiene un parecido con el lenguaje \emph{assembler} 
+más que con el lenguaje C. Se utilizan variables temporales para los resultados de las 
+instrucciones sin repetir concatenando "\%" y un número. La etiqueta 10 hace referencia 
+al control del salto que en la última instrucción decide si saltar a la etiqueta 14 o 24. 
 En la etiqueta 14 se cargan las variables \%2 y \%3 que hacen referencia a las variables 
-a y b para realizar la llamada a la funcino suma. Después, se guarda el resultado en 
+a y b para realizar la llamada a la función suma. Después, se guarda el resultado en 
 el \emph{array}.
 
 \begin{lstlisting}[label=comandoC, caption= Fragmento del LLVM IR de CLANG/LLVM del archivo llvm-ir.ll. \cite{repositorio}, language=bash]
@@ -106,11 +106,11 @@ el \emph{array}.
   br label %10  \end{lstlisting}
 
 \section{RTL vs MachineInstr}
-En esta etapa ambos codigos son poco legibles para humanos por lo que su descripción 
-no es sencilla. Se muestra como la declaracion de las variables a y b son expresadas 
+En esta etapa ambos códigos son poco legibles para humanos por lo que su descripción 
+no es sencilla. Se muestra como la declaración de las variables a y b son expresadas 
 por cada compilador. 
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del codigo fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del código fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
     int a = 20;
     int b = 30; \end{lstlisting}
 
@@ -130,17 +130,17 @@ por cada compilador.
 
 
 \section{Assembler}
-Por ultimo, la salida en codigo \emph{assembler} de ambos compiladores es practicamente la misma. 
-A continuacion, se expone la funcion suma expresada en codigo \emph{assembler} destacando 
-la similitud entre ambos compiladores aunque los codigos intermedios sean notoriamente 
+Por último, la salida en código \emph{assembler} de ambos compiladores es prácticamente la misma. 
+A continuación, se expone la función suma expresada en código \emph{assembler} destacando 
+la similitud entre ambos compiladores aunque los códigos intermedios sean notoriamente 
 diferentes en el proceso.
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del codigo fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del código fuente del archivo codigo-ejemplo.c. \cite{repositorio}, language=bash]
 int suma (int a, int b) {
     return a + b;
 }   \end{lstlisting}
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del codigo \emph{assembler} de GCC del archivo codigo-ejemplo.s. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del código \emph{assembler} de GCC del archivo codigo-ejemplo.s. \cite{repositorio}, language=bash]
     .globl	suma
     .type	suma, @function
 suma:
@@ -164,7 +164,7 @@ suma:
 .LFE1:
     .size	suma, .-suma    \end{lstlisting}
 
-\begin{lstlisting}[label=comandoC, caption= Fragmento del codigo \emph{assembler} de CLANG/LLVM del archivo assembly.s. \cite{repositorio}, language=bash]
+\begin{lstlisting}[label=comandoC, caption= Fragmento del código \emph{assembler} de CLANG/LLVM del archivo assembly.s. \cite{repositorio}, language=bash]
 	.globl	suma                    # -- Begin function suma
 	.p2align	4, 0x90
 	.type	suma,@function
